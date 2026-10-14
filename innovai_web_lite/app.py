@@ -3,11 +3,13 @@ import secrets
 import time
 from threading import Lock
 from flask import Flask, jsonify, make_response, render_template, request
+from werkzeug.utils import secure_filename
+from io import BytesIO
 from openai import OpenAI
 from ddgs import DDGS
 
 app = Flask(__name__)
-app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
 
 # API keys stay in RAM only; they are never written to disk or application logs.
 _sessions = {}
@@ -186,6 +188,42 @@ def chat():
         else:
             friendly = "Não consegui conectar à API. Confira sua internet, a URL, o modelo e a chave."
         return _response({"error": friendly}, sid, 502)
+
+
+@app.post("/api/upload")
+def upload_file():
+    """Extract readable text from supported documents; files are processed in memory only."""
+    sid = _session_id()
+    uploaded = request.files.get("file")
+    if not uploaded or not uploaded.filename:
+        return _response({"error": "Escolha um arquivo para anexar."}, sid, 400)
+    filename = secure_filename(uploaded.filename) or "arquivo"
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    allowed = {"txt", "md", "csv", "json", "py", "js", "html", "css", "xml", "log", "pdf", "docx"}
+    if ext not in allowed:
+        return _response({"error": "Formato não suportado. Envie TXT, MD, CSV, JSON, código, PDF ou DOCX."}, sid, 400)
+    raw = uploaded.read()
+    if len(raw) > 7 * 1024 * 1024:
+        return _response({"error": "O arquivo excede o limite de 7 MB."}, sid, 413)
+    try:
+        if ext == "pdf":
+            from pypdf import PdfReader
+            reader = PdfReader(BytesIO(raw))
+            text = "\n".join((page.extract_text() or "") for page in reader.pages[:40])
+        elif ext == "docx":
+            from docx import Document
+            doc = Document(BytesIO(raw))
+            text = "\n".join(paragraph.text for paragraph in doc.paragraphs)
+            for table in doc.tables:
+                text += "\n" + "\n".join(" | ".join(cell.text for cell in row.cells) for row in table.rows)
+        else:
+            text = raw.decode("utf-8-sig", errors="replace")
+    except Exception:
+        return _response({"error": "Não consegui ler esse arquivo. Se for um PDF escaneado, tente enviar uma versão com texto selecionável."}, sid, 400)
+    text = text.strip()
+    if not text:
+        return _response({"error": "Não encontrei texto legível no arquivo."}, sid, 400)
+    return _response({"filename": filename, "text": text[:9000], "truncated": len(text) > 9000}, sid)
 
 
 @app.post("/api/forget-key")

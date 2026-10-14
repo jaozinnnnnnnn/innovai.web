@@ -43,8 +43,18 @@
         <div id="messages" class="messages" aria-live="polite"></div>
         <div id="typing" class="typing hidden"><span></span><span></span><span></span><small>Innovai está pensando</small></div>
         <form id="composer" class="composer">
+          <div id="attachmentStatus" class="attachment-status hidden" aria-live="polite"></div>
           <textarea id="messageInput" rows="1" maxlength="12000" placeholder="Escreva sua mensagem…" aria-label="Sua mensagem"></textarea>
-          <div class="composer-footer"><span>Enter para enviar · Shift + Enter para pular linha</span><button id="sendBtn" class="send-btn" type="submit" aria-label="Enviar mensagem">↑</button></div>
+          <div class="composer-footer">
+            <div class="composer-tools">
+              <input id="fileInput" type="file" accept=".txt,.md,.csv,.json,.pdf,.docx,.py,.js,.html,.css,.xml,.log" hidden>
+              <button id="attachBtn" class="tool-btn" type="button" aria-label="Anexar arquivo" title="Anexar arquivo">＋</button>
+              <button id="micBtn" class="tool-btn" type="button" aria-label="Ditado por voz" title="Falar mensagem">🎙</button>
+              <span id="voiceStatus" class="voice-status" aria-live="polite"></span>
+            </div>
+            <span class="composer-hint">Enter para enviar · Shift + Enter para pular linha</span>
+            <button id="sendBtn" class="send-btn" type="submit" aria-label="Enviar mensagem">↑</button>
+          </div>
         </form>
         <p class="disclaimer">O Innovai pode cometer erros. Confira informações importantes.</p>
       </section>
