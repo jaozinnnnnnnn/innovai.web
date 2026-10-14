@@ -7,6 +7,9 @@ Versão web independente e limitada do Innovai 1.5 Beta, criada para funcionar e
 - Interface responsiva para PC e celular.
 - Chat com histórico mantido durante a sessão atual da página.
 - Configuração da própria chave de API e modelo compatível com o protocolo OpenAI.
+- Pesquisa automática na web para cada pergunta, usando resultados públicos do DuckDuckGo sem exigir chave de busca separada.
+- Respostas orientadas a citar links de fontes; links ficam clicáveis no chat.
+- Para pesquisa mais extensa, o usuário pode escrever “pesquisa aprofundada” na mensagem; são solicitados mais resultados e uma comparação maior entre fontes.
 - Presets para OpenRouter, Gemini API, OpenAI e Groq, além de URL personalizada.
 - Sem seletor Fácil/Médio/Pro.
 - PWA básico: manifest, ícone e cache do shell; o chat exige internet.
@@ -57,3 +60,9 @@ Não envie chaves de API para o GitHub. Este projeto não contém chaves embutid
 ## Observação
 
 Esta é uma implementação web nova, inspirada na proposta e no nome do Innovai 1.5 Beta; ela não reaproveita diretamente o motor desktop Python, porque os recursos locais desse motor não funcionam automaticamente dentro de um site hospedado.
+
+## Pesquisa automática na internet
+
+O servidor tenta buscar resultados públicos na web para cada pergunta. Isso não garante que toda informação esteja correta ou atualizada: resultados podem falhar, mudar ou trazer páginas de baixa qualidade. O modelo deve informar quando não consegue confirmar um fato e fornecer links para as fontes usadas. A pesquisa depende da disponibilidade do DuckDuckGo e de acesso à internet pelo servidor.
+
+A pesquisa é feita no servidor com a pergunta enviada pelo usuário. Não coloque informações sensíveis em mensagens. Para um serviço público, configure limites de uso e proteção contra abuso, pois cada pergunta gera tráfego de pesquisa e uma chamada à API do provedor de IA.

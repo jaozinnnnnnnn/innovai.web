@@ -19,10 +19,21 @@ function setPage(page) {
   $('sidebar').classList.remove('open');
 }
 function escapeHtml(value) { return value.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function safeMessageHtml(value) {
+  const links = [];
+  let html = escapeHtml(value).replace(/\[([^\]]{1,180})\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => {
+    const token = `__INNOVAI_LINK_${links.length}__`;
+    links.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+    return token;
+  });
+  html = html.replace(/(^|\s)(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
+  links.forEach((link, index) => { html = html.replace(`__INNOVAI_LINK_${index}__`, link); });
+  return html.replace(/\n/g, '<br>');
+}
 function renderMessage(role, content) {
   const row = document.createElement('article'); row.className = `message ${role}`;
   if (role === 'assistant') { const avatar = document.createElement('div'); avatar.className = 'avatar'; avatar.textContent = 'i'; row.appendChild(avatar); }
-  const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.innerHTML = escapeHtml(content); row.appendChild(bubble);
+  const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.innerHTML = safeMessageHtml(content); row.appendChild(bubble);
   $('messages').appendChild(row); $('welcome').classList.add('hidden');
   window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
