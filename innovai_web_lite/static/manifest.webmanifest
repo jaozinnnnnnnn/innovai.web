@@ -1,0 +1,10 @@
+{
+  "name": "Innovai Web Lite",
+  "short_name": "Innovai",
+  "description": "Assistente de IA simplificado do Innovai.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [{"src":"/static/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

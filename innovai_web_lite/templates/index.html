@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Innovai Web Lite — seu assistente de IA, direto no navegador.">
+  <title>Innovai — Web Lite</title>
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Innovai início"><img class="brand-logo" src="/static/innovai-logo.png" alt=""><span class="brand-wordmark"><strong>INNOVAI</strong><small>WEB LITE</small></span></a>
+      <button id="newChat" class="new-chat"><span>＋</span> Nova conversa</button>
+      <div class="nav-label">ESPAÇO DE TRABALHO</div>
+      <button class="nav-item active" id="chatNav"><span>◈</span> Conversas</button>
+      <button class="nav-item" id="settingsNav"><span>⚙</span> Configurações</button>
+      <div class="sidebar-bottom"><div class="status-dot"></div><div><strong>Innovai Web</strong><small id="connectionState">Configure sua API</small></div></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button id="menuToggle" class="icon-btn menu-toggle" aria-label="Abrir menu">☰</button>
+        <div class="topbar-title"><span class="eyebrow">SEU ASSISTENTE PESSOAL</span><h1 id="pageTitle">Vamos pensar juntos.</h1></div>
+        <div class="topbar-actions"><span class="lite-chip">WEB LITE</span><button class="icon-btn" id="settingsShortcut" aria-label="Configurações">⚙</button></div>
+      </header>
+
+      <section id="chatPage" class="page chat-page">
+        <div id="welcome" class="welcome">
+          <div class="welcome-symbol"><img src="/static/innovai-logo.png" alt="Innovai"></div>
+          <p class="eyebrow">CONHEÇA O INNOVAI</p>
+          <h2>Uma ideia de cada vez.<br><span>Vamos começar.</span></h2>
+          <p class="welcome-copy">Faça uma pergunta, organize uma ideia ou peça ajuda para resolver um problema.</p>
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="Me ajude a organizar minhas tarefas de hoje."><span>↗</span><strong>Organizar tarefas</strong><small>Transforme ideias em próximos passos</small></button>
+            <button class="suggestion" data-prompt="Explique um assunto difícil de forma simples, com exemplos."><span>⌘</span><strong>Aprender algo novo</strong><small>Entenda conceitos com clareza</small></button>
+            <button class="suggestion" data-prompt="Me ajude a criar um plano para um projeto que tenho em mente."><span>◇</span><strong>Planejar um projeto</strong><small>Saia da ideia para a execução</small></button>
+          </div>
+        </div>
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div id="typing" class="typing hidden"><span></span><span></span><span></span><small>Innovai está pensando</small></div>
+        <form id="composer" class="composer">
+          <textarea id="messageInput" rows="1" maxlength="12000" placeholder="Escreva sua mensagem…" aria-label="Sua mensagem"></textarea>
+          <div class="composer-footer"><span>Enter para enviar · Shift + Enter para pular linha</span><button id="sendBtn" class="send-btn" type="submit" aria-label="Enviar mensagem">↑</button></div>
+        </form>
+        <p class="disclaimer">O Innovai pode cometer erros. Confira informações importantes.</p>
+      </section>
+
+      <section id="settingsPage" class="page settings-page hidden">
+        <div class="settings-card">
+          <div class="settings-icon">⚙</div><p class="eyebrow">PERSONALIZE O ACESSO</p><h2>Configurações da IA</h2>
+          <p class="settings-intro">Use sua própria chave de API. O Innovai Web Lite não inclui créditos de IA nem cobra pelo uso do provedor.</p>
+          <form id="settingsForm">
+            <label for="provider">Provedor</label>
+            <select id="provider"><option value="openrouter">OpenRouter</option><option value="gemini">Google Gemini API</option><option value="openai">OpenAI</option><option value="groq">Groq</option><option value="custom">Outro compatível com OpenAI</option></select>
+            <label for="apiKey">Chave de API</label>
+            <div class="key-field"><input id="apiKey" type="password" autocomplete="off" placeholder="Cole sua chave aqui" required><button id="showKey" type="button" class="show-key">Mostrar</button></div>
+            <label for="baseUrl">Endereço da API</label><input id="baseUrl" type="url" value="https://openrouter.ai/api/v1" required>
+            <label for="model">Modelo</label><input id="model" type="text" value="openai/gpt-4o-mini" required>
+            <p class="form-note">Sua chave fica apenas na memória temporária do servidor e não é gravada em arquivo ou banco de dados. Ela pode ser perdida quando o serviço reiniciar. Use este site apenas se confiar em quem o hospeda.</p>
+            <div class="settings-actions"><button type="submit" class="save-btn" id="saveConfig">Salvar configuração</button><button type="button" class="clear-btn" id="forgetKey">Apagar chave</button></div>
+            <div id="settingsMessage" class="form-message" role="status"></div>
+          </form>
+          <div class="provider-links"><a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">Criar chave OpenRouter ↗</a><a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">Criar chave Gemini ↗</a></div>
+        </div>
+        <div class="limits-card"><h3>O que esta versão inclui</h3><ul><li>Chat com respostas padronizadas</li><li>Histórico mantido nesta sessão do navegador</li><li>Layout adaptado para computador e celular</li><li>Atalho para adicionar à tela inicial, quando compatível</li></ul><h3>O que fica na versão instalada</h3><ul><li>Controle do computador e abertura de aplicativos</li><li>Comandos avançados por voz</li><li>Modos Fácil, Médio e Pro</li><li>Integrações e automações locais</li></ul></div>
+      </section>
+      <footer class="site-footer"><span>INNOVAI WEB LITE</span><span>Uma experiência simplificada do Innovai</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/static/app.js" defer></script>
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/static/sw.js').catch(()=>{}));}</script>
+</body>
+</html>
